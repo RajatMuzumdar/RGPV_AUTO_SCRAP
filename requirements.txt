@@ -1,7 +1,5 @@
 beautifulsoup4==4.11.1
 bs4==0.0.1
-et-xmlfile==1.1.0
-idna==3.3
 lxml==4.8.0
 numpy==1.19.5
 openpyxl==3.0.9
@@ -11,6 +9,5 @@ pytesseract==0.3.7
 pywin32==304
 requests==2.27.1
 selenium==3.141.0
-soupsieve==2.3.2.post1
 urllib3==1.26.9
 webdriver-manager==3.7.0

@@ -9,9 +9,9 @@ def clean_up(dir):
     for file in os.listdir(dir):
         fpath = os.path.join(dir, file)
         os.remove(fpath)
-        print(file," removed")
+        print("Cleanup:", file, "removed")
 
-def create_dir(dir):
+def create_dir(dir) -> str:
     parentPath = '.'
     # path = os.path.join(parentPath, dir)
     path = dir
@@ -25,13 +25,13 @@ def create_dir(dir):
         return path
 
 
-def get_string(img_path):
+def get_string(img_path) -> str:
 
      pytesseract.pytesseract.tesseract_cmd = config.TESS_DRIVER
      result = pytesseract.image_to_string(Image.open(img_path))
      return result
 
-def captcha_decode(captcha_url : str, dirpath : str = ".\\temp"):
+def captcha_decode(captcha_url : str, dirpath : str = ".\\temp") -> str:
     url = captcha_url
     r = requests.get(url)
 

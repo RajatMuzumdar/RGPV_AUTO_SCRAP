@@ -1,4 +1,6 @@
-def get_input() -> list:
+from itertools import zip_longest as lzip
+
+def get_input() -> dict:
     """
     print sytax
     print examples
@@ -8,9 +10,9 @@ def get_input() -> list:
     {'class': '', 'semester': '', 'prefix': '', 'from': '', 'to': ''}
     """
     
-    order = ['class', 'semester', 'prefix', 'from', 'to']
+    order = ['class', 'semester', 'prefix', 'from', 'to', 'hidechrome']
 
-    # syntax = [ {'class': '{ [D]DMCA | [M]CA }', 'semester': '{ 1|2|3|4|5|6|7|8 }',
+    # syntax = [ {'class': '{ D[DMCA] | M[CA] }', 'semester': '{ 1|2|3|4|5|6|7|8 }',
         # 'prefix': '$Enrollment_number_common_part', 
         # 'from': '$Enrollment_number_range_start', 'to': '$Enrollment_number_range_end'} ]
     # for i in range(len(syntax)):
@@ -20,28 +22,38 @@ def get_input() -> list:
     #     print()
 
     examples = [
-        {'class': 'DDMCA', 'semester': '5', 'prefix': '0827CA19DD', 'from': '1', 'to': '3'},
-        {'class': 'DDMCA', 'semester': '1', 'prefix': '0827CA21DD', 'from': '10', 'to': '20'},
-        {'class': 'MCA', 'semester': '2', 'prefix': '08XXX', 'from': '5', 'to': '15'},
+        {'class': 'DDMCA', 'semester': '5', 'prefix': '0827CA19DD',
+        'from': '1', 'to': '3'},
+        {'class': 'DDMCA', 'semester': '5', 'prefix': '0827CA19DD',
+        'from': '1', 'to': '3', 'hidechrome': 'true'},
+        {'class': 'MCA', 'semester': '2', 'prefix': '0827ca2010',
+        'from': '5', 'to': '15'},
+        {'class': 'DDMCA', 'semester': '1', 'prefix': '0827ca21DD',
+        'from': '10', 'to': '20'},
     ]
+    
+    syntax = { 'class': r'{ D[DMCA] | M[CA] }',
+    'semester': r'{ 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 }', 'hidechrome': r'optional { true | false }'}
 
     print('\nINPUT FORMAT')
-    print('$' + ' $'.join(order))
-    print('Press Ctrl+c to abort.')
+    print('\n$' + ' $'.join(order).upper())
+    print()
+    for k, v in syntax.items(): 
+        print(k.upper(), '\t' if len(k) < 8 else '', 'can be', v)
     print("\nExamples:")
     for i, d in enumerate(examples):
         print(' '.join(examples[i].values()))
         # print(' '.join(d))
     print()
+    print('Press Ctrl+c to abort.')
     inp = input(">>? ")
-    return { k:v for (k,v) in zip(order, inp.split(' ')) }
+    return { k:v for (k,v) in lzip(order, inp.split(' ')) }
 
-def validate(inputList : list) -> bool:
+def validate(inputList : dict) -> bool:
 
     import re
 
-
-    rePattern = r'(D(D(M(CA?)?)?)?)|(M(CA?)?)'
+    rePattern = r'((D(D(M(CA?)?)?)?)|(M(CA?)?))\w*'
     branch = re.compile(rePattern, re.I)
     if(not branch.match(inputList['class'])):
         print('Invalid input: $branch can be one of { DDMCA, MCA }')
@@ -51,7 +63,7 @@ def validate(inputList : list) -> bool:
         inputList['to']         = int(float(inputList['to']))
         inputList['semester']   = int(float(inputList['semester']))
     except ValueError:
-        print('Invalid input: $from or $to or $semester value not a number.')
+        print('\nInvalid input: $from or $to or $semester value not a number.')
         return False
     else:
         if(inputList['semester'] not in range(1, 11)): 
@@ -59,7 +71,7 @@ def validate(inputList : list) -> bool:
             return False
         return True
 
-def enrgenerator(pre, frm, to):
+def enrgenerator(pre, frm, to) -> list:
     list=[]
     pre=pre.upper()
     for n in range(frm, to + 1):
@@ -69,7 +81,7 @@ def enrgenerator(pre, frm, to):
             list.append(pre + str(n))
     return list
 
-def confirm(inputList : list) -> bool:
+def confirm(inputList : dict) -> bool:
     """
     Confirm if user doesn't want to re-enter the input.
     """
@@ -89,15 +101,15 @@ def confirm(inputList : list) -> bool:
         print(f"{inputList['prefix']}", end="") 
         print(f"0{to}" if (i < 10) else f"{to}")
     
-    confirmation = True if \
-        input("Re-input? (Y/N) [Default = N] ")[:1].lower() != 'y' \
-            else False
+    confirmation = True if input(
+        "Re-input? (Y/N) [Default = N] "
+        ).strip()[:1].lower() != 'y' else False
 
     return confirmation
 
 if __name__ == '__main__':
     lst = get_input()
-    print("out of get_input()")
+    # print("out of get_input()")
     for i in lst:
         print(i, end=" ")
     # print(2 in range(1, 5))

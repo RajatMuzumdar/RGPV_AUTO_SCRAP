@@ -14,6 +14,7 @@ A python script which scrapes results from [RGPV results](http://result.rgpv.ac.
     >>? $BranchName 
         $EnrollmentNumberCommonPart 
         $RollNosFrom $To
+        $hideChrome (optional)
 ```
 
 - Watch and Wait...

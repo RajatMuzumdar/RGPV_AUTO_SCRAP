@@ -1,6 +1,6 @@
 from itertools import zip_longest as lzip
 
-def get_input() -> list:
+def get_input() -> dict:
     """
     print sytax
     print examples

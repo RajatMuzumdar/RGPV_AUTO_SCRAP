@@ -56,9 +56,9 @@ def main():
         pageStatus = automate(pageData, i)
         if (pageStatus == Status.OK):
             scrape(students)
-        elif(pageStatus in (Status.NUM_NOT_FOUND, Status.OK) ):
+        if(pageStatus in (Status.NUM_NOT_FOUND, Status.OK) ):
             i += 1
-            time.sleep(2)
+            time.sleep(3)
         # elif (pageStatus == Status.INFO_ERROR):
         # else:
         #     continue
@@ -204,7 +204,7 @@ def automate(pgObj : WebpageFields, i : int) -> Status:
     # time.sleep(2)
     # time.sleep(1)
     viewr.click()
-    time.sleep(2)
+    time.sleep(3)
     
     stat = Status(Status.OK) 
     try:

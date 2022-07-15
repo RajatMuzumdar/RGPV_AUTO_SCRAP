@@ -1,10 +1,11 @@
 # Project RAS (RGPV AUTO SCRAPER) 
 ![](https://img.shields.io/badge/semester-project-blueviolet) 
+![](https://img.shields.io/github/license/RajatMuzumdar/RGPV_AUTO_SCRAP)
 
-![](https://img.shields.io/tokei/lines/github/kushaagr/RGPV_AUTO_SCRAP)
-![](https://img.shields.io/github/directory-file-count/kushaagr/RGPV_AUTO_SCRAP)
-![](https://img.shields.io/github/languages/code-size/kushaagr/RGPV_AUTO_SCRAP)
-![](https://img.shields.io/github/repo-size/kushaagr/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/tokei/lines/github/RajatMuzumdar/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/directory-file-count/RajatMuzumdar/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/languages/code-size/RajatMuzumdar/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/repo-size/RajatMuzumdar/RGPV_AUTO_SCRAP)
 
 ## What is this?
 A python script which scrapes results from [RGPV results](http://result.rgpv.ac.in/Result/ProgramSelect.aspx) website and extracts them to an excel sheet (.xlsx file)

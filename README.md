@@ -1,6 +1,8 @@
 # Project RAS (RGPV AUTO SCRAPER) 
-![](https://img.shields.io/badge/semester-project-blueviolet) 
-![](https://img.shields.io/github/license/RajatMuzumdar/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/static/v1?label=Dev&message=Rajat&color=black&link=http://github.com/RajatMuzumdar&style=for-the-badge)
+![](https://img.shields.io/static/v1?label=Dev&message=Kushagra&color=black&link=http://github.com/kushaagr&style=for-the-badge)
+![](https://img.shields.io/badge/semester-project-blueviolet?&link=http://github.com/RajatMuzumdar/RGPV_AUTO_SCRAP&link=http://github.com/kushaagr/RGPV_AUTO_SCRAP&style=for-the-badge) 
+![](https://img.shields.io/github/license/RajatMuzumdar/RGPV_AUTO_SCRAP?style=flat-square)
 
 ![](https://img.shields.io/tokei/lines/github/RajatMuzumdar/RGPV_AUTO_SCRAP)
 ![](https://img.shields.io/github/directory-file-count/RajatMuzumdar/RGPV_AUTO_SCRAP)

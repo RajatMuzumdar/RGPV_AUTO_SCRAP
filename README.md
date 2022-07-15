@@ -1,4 +1,10 @@
-# Project RAS (RGPV AUTO SCRAPER)
+# Project RAS (RGPV AUTO SCRAPER) 
+![](https://img.shields.io/badge/semester-project-blueviolet) 
+
+![](https://img.shields.io/tokei/lines/github/kushaagr/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/directory-file-count/kushaagr/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/languages/code-size/kushaagr/RGPV_AUTO_SCRAP)
+![](https://img.shields.io/github/repo-size/kushaagr/RGPV_AUTO_SCRAP)
 
 ## What is this?
 A python script which scrapes results from [RGPV results](http://result.rgpv.ac.in/Result/ProgramSelect.aspx) website and extracts them to an excel sheet (.xlsx file)
@@ -21,3 +27,9 @@ A python script which scrapes results from [RGPV results](http://result.rgpv.ac.
 
 ## Errors? (Troubleshoot)
 - If Tessaract is not installed system-wide then find absolute path to Tesseract.exe and set "TESS_DRIVER" in config.py to the absolute path
+
+## Screenshots
+![SS1 29 Friday 15 18-33-46](https://user-images.githubusercontent.com/68564934/179230924-32ecdd4a-d499-40ee-86f7-fb19d3157a63.png)
+![SS2 29 Friday 15 18-34-36](https://user-images.githubusercontent.com/68564934/179231051-be61e249-6178-4e52-a7dc-e26e642a404d.png)
+![SS3 29 Friday 15 18-35-28](https://user-images.githubusercontent.com/68564934/179231060-0374ed1a-d376-40b6-89c3-ef61078b7cf8.png)
+![SS4 29 Friday 15 18-35-36](https://user-images.githubusercontent.com/68564934/179231069-a20b4df3-f14e-4603-ae10-a2d75909a24d.png)

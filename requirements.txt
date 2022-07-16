@@ -1,13 +1,13 @@
-beautifulsoup4==4.11.1
-bs4==0.0.1
-lxml==4.8.0
-numpy==1.19.5
-openpyxl==3.0.9
-pandas==1.1.5
-Pillow==8.4.0
-pytesseract==0.3.7
-pywin32==304
-requests==2.27.1
-selenium==3.141.0
-urllib3==1.26.9
-webdriver-manager==3.7.0
+beautifulsoup4 >= 4.11.1, == 4.*
+bs4 >= 0.0.1
+lxml >= 4.8.0
+openpyxl >= 3.0.9
+pandas >= 1.1.5
+pytesseract >= 0.3.7
+pywin32 >= 304
+requests >= 2.27.1
+selenium >= 3.141.0, == 3.*
+urllib3 >= 1.26.9
+webdriver-manager >= 3.7.0
+Pillow >= 8.4.0
+numpy >= 1.19.5

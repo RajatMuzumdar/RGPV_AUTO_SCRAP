@@ -39,7 +39,7 @@ def get_input() -> dict:
     print('\n$' + ' $'.join(order).upper())
     print()
     for k, v in syntax.items(): 
-        print(k.upper(), '\t' if len(k) < 8 else '', 'can be', v)
+        print(k.upper().ljust(11), 'can be', v)
     print("\nExamples:")
     for i, d in enumerate(examples):
         print(' '.join(examples[i].values()))

@@ -1,9 +1,10 @@
 # Project RAS (RGPV AUTO SCRAPER) 
 [![Maintainer Rajat](https://img.shields.io/static/v1?label=Dev&message=Rajat&color=gold&style=for-the-badge)](http://github.com/RajatMuzumdar)
 [![Maintainer Kushagra](https://img.shields.io/static/v1?label=Dev&message=Kushagra&color=gold&style=for-the-badge)](http://github.com/kushaagr)
-![Sem 6 Minor Project 1](https://img.shields.io/badge/semester-project-blueviolet?style=for-the-badge) 
-![GNU GP v2](https://img.shields.io/github/license/RajatMuzumdar/RGPV_AUTO_SCRAP?style=for-the-badge) 
+[![Sem 6 Minor Project 1](https://img.shields.io/badge/semester-project-blueviolet?style=for-the-badge)]()
+[![GNU GP v2](https://img.shields.io/github/license/RajatMuzumdar/RGPV_AUTO_SCRAP?style=for-the-badge)](./license)
 
+![Windows project](https://img.shields.io/static/v1?label=&logo=Windows&message=windows&color=blue)
 ![Total LOC](https://img.shields.io/tokei/lines/github/RajatMuzumdar/RGPV_AUTO_SCRAP)
 ![File count](https://img.shields.io/github/directory-file-count/RajatMuzumdar/RGPV_AUTO_SCRAP)
 ![Code size](https://img.shields.io/github/languages/code-size/RajatMuzumdar/RGPV_AUTO_SCRAP)

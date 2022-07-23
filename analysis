@@ -1,0 +1,115 @@
+import openpyxl
+
+path = "6th.xlsx"
+wb_obj = openpyxl.load_workbook(path)
+sheet_obj = wb_obj.active
+
+headers = ["GRADE"]
+rslt = []
+Sub01 = []
+Sub02 = []
+Sub03 = []
+Sub04 = []
+Sub05 = []
+Sub06 = []
+Sub07 = []
+SUB01 = []
+SUB02 = []
+SUB03 = []
+SUB04 = []
+SUB05 = []
+SUB06 = []
+SUB07 = []
+avgrd = ["Avg"]
+grads = ["A+", "A", "B+", "B", "C+", "C", "D", "F", "I", "W"]
+max_row = sheet_obj.max_row
+max_column = sheet_obj.max_column
+
+
+def getData():
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=4)
+        rslt.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=7)
+        Sub01.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=8)
+        Sub02.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=9)
+        Sub03.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=10)
+        Sub04.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=11)
+        Sub05.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=12)
+        Sub06.append(cell_obj.value)
+    for i in range(2, max_row + 1):
+        cell_obj = sheet_obj.cell(row=i, column=13)
+        Sub07.append(cell_obj.value)
+    print("gotdata")
+    data = analyse()
+    appnd(data)
+
+
+def analyse():
+
+    for grd in range(len(grads)):
+        SUB01.append(Sub01.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB02.append(Sub02.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB03.append(Sub03.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB04.append(Sub04.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB05.append(Sub05.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB06.append(Sub06.count(grads[grd]))
+    for grd in range(len(grads)):
+        SUB07.append(Sub07.count(grads[grd]))
+
+    def avgGrd(List):
+        counter = 0
+        num = List[0]
+        for i in List:
+            frq = List.count(i)
+            if (frq > counter):
+                counter = frq
+                num = i
+        return num
+
+    avgrd.append(avgGrd(Sub01))
+    avgrd.append(avgGrd(Sub02))
+    avgrd.append(avgGrd(Sub03))
+    avgrd.append(avgGrd(Sub04))
+    avgrd.append(avgGrd(Sub05))
+    avgrd.append(avgGrd(Sub06))
+    avgrd.append(avgGrd(Sub07))
+    avgrd.append(avgGrd(avgrd))
+    analysis = list(zip(grads, SUB01, SUB02, SUB03, SUB04, SUB05, SUB06,
+                        SUB07))
+    print("analysis done ")
+    return analysis
+
+
+def appnd(data):
+    for i in range(7, max_column + 1):
+        cell_obj = sheet_obj.cell(row=1, column=i)
+        headers.append(cell_obj.value)
+    sheet_obj.append(headers)
+    wb_obj.save(path)
+
+    for row in data:
+        sheet_obj.append(row)
+    sheet_obj.append(avgrd)
+    wb_obj.save(path)
+    print("data saved")
+
+
+if __name__ == '__main__':
+    getData()

@@ -1,112 +1,94 @@
 import openpyxl
+from operator import itemgetter
 
-path = "6th.xlsx"
+path = 'result6th.xlsx'
 wb_obj = openpyxl.load_workbook(path)
 sheet_obj = wb_obj.active
-
+analysis = []
 headers = ["GRADE"]
 rslt = []
-Sub01 = []
-Sub02 = []
-Sub03 = []
-Sub04 = []
-Sub05 = []
-Sub06 = []
-Sub07 = []
-SUB01 = []
-SUB02 = []
-SUB03 = []
-SUB04 = []
-SUB05 = []
-SUB06 = []
-SUB07 = []
+allSub = []
+Subj = []
+SUBJ = []
 avgrd = ["Avg"]
 grads = ["A+", "A", "B+", "B", "C+", "C", "D", "F", "I", "W"]
+
 max_row = sheet_obj.max_row
 max_column = sheet_obj.max_column
 
 
 def getData():
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=4)
-        rslt.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=7)
-        Sub01.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=8)
-        Sub02.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=9)
-        Sub03.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=10)
-        Sub04.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=11)
-        Sub05.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=12)
-        Sub06.append(cell_obj.value)
-    for i in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row=i, column=13)
-        Sub07.append(cell_obj.value)
+
+    #taking all subject grades in allSub variable as list of list
+    for j in range(7, 14):
+        Subj = []
+        for i in range(2, max_row + 1):
+            cell_obj = sheet_obj.cell(row=i, column=j)
+            Subj.append(cell_obj.value)
+        allSub.append(Subj)
+
+    #replacing "F (ABS)" to 'F'
+    for i, x in enumerate(allSub):
+         for j, a in enumerate(x):
+            if 'F (ABS)' in a:
+                allSub[i][j] = a.replace('F (ABS)', 'F')
+
     print("gotdata")
     data = analyse()
     appnd(data)
 
 
 def analyse():
-
-    for grd in range(len(grads)):
-        SUB01.append(Sub01.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB02.append(Sub02.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB03.append(Sub03.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB04.append(Sub04.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB05.append(Sub05.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB06.append(Sub06.count(grads[grd]))
-    for grd in range(len(grads)):
-        SUB07.append(Sub07.count(grads[grd]))
-
-    def avgGrd(List):
-        counter = 0
-        num = List[0]
-        for i in List:
-            frq = List.count(i)
-            if (frq > counter):
-                counter = frq
-                num = i
-        return num
-
-    avgrd.append(avgGrd(Sub01))
-    avgrd.append(avgGrd(Sub02))
-    avgrd.append(avgGrd(Sub03))
-    avgrd.append(avgGrd(Sub04))
-    avgrd.append(avgGrd(Sub05))
-    avgrd.append(avgGrd(Sub06))
-    avgrd.append(avgGrd(Sub07))
-    avgrd.append(avgGrd(avgrd))
-    analysis = list(zip(grads, SUB01, SUB02, SUB03, SUB04, SUB05, SUB06,
-                        SUB07))
-    print("analysis done ")
+         
+    #counting grades 
+    print(len(allSub))
+    for i in allSub:
+        SUBJ = []       
+        for grd in grads:
+            SUBJ.append(i.count(grd))
+        rslt.append(SUBJ)
+    
+    #making new list of list with indexed values of list...list of 1st's 1st and 2nd's 2nd...    
+    for i in range(10):
+        analysis.append(list(map(itemgetter(i), rslt)))
     return analysis
 
 
 def appnd(data):
+    
+    
+    #retrieving headers from excel
     for i in range(7, max_column + 1):
         cell_obj = sheet_obj.cell(row=1, column=i)
         headers.append(cell_obj.value)
-    sheet_obj.append(headers)
     wb_obj.save(path)
+    
+    # sheet_obj.append(avgrd)
+    
+    #inserting headers 
+    r=2
+    colmn=16
+    for row in headers:
+        sheet_obj.cell(row=r, column=colmn).value = row
+        colmn+=1
 
-    for row in data:
-        sheet_obj.append(row)
-    sheet_obj.append(avgrd)
+    #inserting grades 
+    r=3
+    colmn=16    
+    for row in grads:
+        sheet_obj.cell(row=r, column=colmn).value = row
+        r+=1
+        
+    #inserting data  
+    r = 3
+    for innerlist in data: 
+        colmn=17
+        for row in innerlist:
+           sheet_obj.cell(row=r, column=colmn).value = row
+           colmn+=1
+        r+= 1
+    
+    
     wb_obj.save(path)
     print("data saved")
 

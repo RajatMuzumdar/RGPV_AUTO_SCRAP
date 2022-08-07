@@ -369,9 +369,9 @@ def extract(pgObj: WebpageFields, students: list):
     print(f'{records} records extracted to \'{pgObj.SHEETNAME}.xlsx\'.')
     print()
     
-    print("Press Ctrl+c to exit.")
+    
     import analysis 
-    analysis.getData(EXCELFILE)
-
+    analysis.getData(EXCELFILE,pgObj.BRANCH)
+    print("Press Ctrl+c to exit.")
 if __name__ == '__main__':
     main()

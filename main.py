@@ -58,7 +58,7 @@ def main():
         # pageStatus = automate(driver, pageData, i)
         pageStatus = automate(pageData, i)
         if (pageStatus == Status.OK):
-            scrape(pageData,students)
+            scrape(pageData, students)
         if (pageStatus in (Status.NUM_NOT_FOUND, Status.OK)):
             i += 1
             time.sleep(3)
@@ -67,6 +67,7 @@ def main():
         #     continue
     driver.close()
     extract(pageData, students)
+
     # cleanup(driver)
 
 
@@ -99,8 +100,6 @@ def init(debug=False, headless=False):
             + str(versionToFetch)
         response = requests.get(versionToFetch)
         return response.text
-
-    # In[ ]:
 
     from selenium.webdriver import Chrome, ChromeOptions
 
@@ -136,8 +135,10 @@ def input():
             inputReceived = True
 
     navigateRadio = {
-        'D':'/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
-        'M':'/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
+        'D':
+        '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
+        'M':
+        '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
     }
     branchResult = {
         'D': 'http://result.rgpv.ac.in/Result/McaDDrslt.aspx',
@@ -325,7 +326,6 @@ def scrape(pgObj: WebpageFields, studentsList: list):
     records += 1
 
 
-
 def extract(pgObj: WebpageFields, students: list):
 
     global caperror, records
@@ -350,7 +350,7 @@ def extract(pgObj: WebpageFields, students: list):
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '05'] = students[9::12]
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '06'] = students[10::12]
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '07'] = students[11::12]
-    
+
     elif pgObj.BRANCH == 'MCA':
         df['Name'] = students[0::10]
         df['Enrollment'] = students[1::10]
@@ -362,14 +362,16 @@ def extract(pgObj: WebpageFields, students: list):
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '03'] = students[7::10]
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '04'] = students[8::10]
         df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '05'] = students[9::10]
-        
+
     with pd.ExcelWriter(EXCELFILE, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name=pgObj.PREFIX, index=True)
     print('Data extraction done.')
     print(f'{records} records extracted to \'{pgObj.SHEETNAME}.xlsx\'.')
     print()
+    
     print("Press Ctrl+c to exit.")
-
+    import analysis 
+    analysis.getData(EXCELFILE)
 
 if __name__ == '__main__':
     main()

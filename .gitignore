@@ -1,13 +1,23 @@
+# Custom files
+try-*.bat
+try-*.cmd
+trial-*.py
+try-*.py
 *dbg.txt
 *.xlsx
 config.py
 temp.py
+
+# Custom folders
+output*/
 temp/
 # Release contains manually compiled python scripts (.pyc)
 release/
 debug/
 extra/
 
+# Sublime editor related files
+*.sublime*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

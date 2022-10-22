@@ -1,8 +1,9 @@
-from enum import Enum, auto
-from sre_constants import BRANCH
 import pandas as pd
 import requests
 import time
+
+from enum import Enum, auto
+from sre_constants import BRANCH
 from bs4 import BeautifulSoup
 from lxml import etree
 from selenium import webdriver
@@ -10,8 +11,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
-import config
 
+
+import analysis
+import config
+import inpututil
 
 class WebpageFields():
 
@@ -33,42 +37,6 @@ class Status(Enum):
     CAPTCHA_ERROR = auto()
     INFO_ERROR = auto()
     UNKNOWN_ERROR = auto()
-
-
-def main():
-
-    global driver, records, caperror, DPATH
-
-    pageData: WebpageFields
-    pageData, _headless = input()
-    driver = init(headless=_headless)
-
-    students = list()
-    records = caperror = 0
-    i = 0
-    # i = pageData.FROM
-
-    driver.get("http://result.rgpv.ac.in/Result/ProgramSelect.aspx")
-    Radio = driver.find_element(by=By.XPATH,
-                                value='%s' % pageData.navigateRadio)
-    Radio.click()
-
-    # while(i in range(pageData.FROM, pageData.TO + 1)):
-    while i < len(pageData.enrList):
-        # pageStatus = automate(driver, pageData, i)
-        pageStatus = automate(pageData, i)
-        if (pageStatus == Status.OK):
-            scrape(pageData, students)
-        if (pageStatus in (Status.NUM_NOT_FOUND, Status.OK)):
-            i += 1
-            time.sleep(3)
-        # elif (pageStatus == Status.INFO_ERROR):
-        # else:
-        #     continue
-    driver.close()
-    extract(pageData, students)
-
-    # cleanup(driver)
 
 
 def init(debug=False, headless=False):
@@ -124,21 +92,19 @@ def init(debug=False, headless=False):
     # driver = webdriver.Chrome(service=svc, options=opts)
 
 
-def input():
-    import input
+def takeinput():
+    
     inputReceived = False
     while (not inputReceived):
-        userInput = input.get_input()
-        if (not input.validate(userInput)):
+        userInput = inpututil.get_input()
+        if (not inpututil.validate(userInput)):
             continue
-        if (input.confirm(userInput)):
+        if (inpututil.confirm(userInput)):
             inputReceived = True
 
     navigateRadio = {
-        'D':
-        '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
-        'M':
-        '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
+        'D': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
+        'M': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
     }
     branchResult = {
         'D': 'http://result.rgpv.ac.in/Result/McaDDrslt.aspx',
@@ -160,7 +126,7 @@ def input():
     # SHEETNAME = MCADD CA19 SEM 6 _unique-id_
     page.SHEETNAME = (f"{userInput['class']} {page.PREFIX[-6:-2]} "
                       f"SEM {page.SEM} uid_{int(time.time())}")
-    page.enrList = input.enrgenerator(page.PREFIX, page.FROM, page.TO)
+    page.enrList = inpututil.enrgenerator(page.PREFIX, page.FROM, page.TO)
     return page, bool(userInput['hidechrome'])
 
 
@@ -369,9 +335,44 @@ def extract(pgObj: WebpageFields, students: list):
     print(f'{records} records extracted to \'{pgObj.SHEETNAME}.xlsx\'.')
     print()
     
-    
-    import analysis 
     analysis.getData(EXCELFILE,pgObj.BRANCH)
     print("Press Ctrl+c to exit.")
+
+
+def main():
+
+    global driver, records, caperror, DPATH
+
+    pageData: WebpageFields
+    pageData, _headless = takeinput()
+    driver = init(headless=_headless)
+
+    students = list()
+    records = caperror = 0
+    i = 0
+    # i = pageData.FROM
+
+    driver.get("http://result.rgpv.ac.in/Result/ProgramSelect.aspx")
+    Radio = driver.find_element(by=By.XPATH,
+                                value='%s' % pageData.navigateRadio)
+    Radio.click()
+
+    # while(i in range(pageData.FROM, pageData.TO + 1)):
+    while i < len(pageData.enrList):
+        # pageStatus = automate(driver, pageData, i)
+        pageStatus = automate(pageData, i)
+        if (pageStatus == Status.OK):
+            scrape(pageData, students)
+        if (pageStatus in (Status.NUM_NOT_FOUND, Status.OK)):
+            i += 1
+            time.sleep(3)
+        # elif (pageStatus == Status.INFO_ERROR):
+        # else:
+        #     continue
+    driver.close()
+    extract(pageData, students)
+    # cleanup(driver)
+
+
 if __name__ == '__main__':
     main()

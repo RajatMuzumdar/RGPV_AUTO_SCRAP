@@ -1,9 +1,10 @@
 import pandas as pd
 import requests
 import time
-
 from enum import Enum, auto
-from sre_constants import BRANCH
+from win32com.client import Dispatch
+
+# from sre_constants import BRANCH
 from bs4 import BeautifulSoup
 from lxml import etree
 from selenium import webdriver
@@ -12,10 +13,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 
-
 import analysis
 import config
-import inpututil
+import input_utils
+from captcha_utils import create_dir
 
 class WebpageFields():
 
@@ -40,11 +41,10 @@ class Status(Enum):
 
 
 def init(debug=False, headless=False):
+
     global driver, debug_setting, DPATH
     debug_setting = debug
 
-    from win32com.client import Dispatch
-    from captcha_utils import create_dir
 
     DPATH = create_dir('temp')
 
@@ -96,10 +96,10 @@ def takeinput():
     
     inputReceived = False
     while (not inputReceived):
-        userInput = inpututil.get_input()
-        if (not inpututil.validate(userInput)):
+        userInput = input_utils.get_input()
+        if (not input_utils.validate(userInput)):
             continue
-        if (inpututil.confirm(userInput)):
+        if (input_utils.confirm(userInput)):
             inputReceived = True
 
     navigateRadio = {
@@ -126,7 +126,7 @@ def takeinput():
     # SHEETNAME = MCADD CA19 SEM 6 _unique-id_
     page.SHEETNAME = (f"{userInput['class']} {page.PREFIX[-6:-2]} "
                       f"SEM {page.SEM} uid_{int(time.time())}")
-    page.enrList = inpututil.enrgenerator(page.PREFIX, page.FROM, page.TO)
+    page.enrList = input_utils.enrgenerator(page.PREFIX, page.FROM, page.TO)
     return page, bool(userInput['hidechrome'])
 
 

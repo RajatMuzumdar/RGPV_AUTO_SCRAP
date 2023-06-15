@@ -4,7 +4,7 @@ import time
 from enum import Enum, auto
 from win32com.client import Dispatch
 
-# from sre_constants import BRANCH
+# from sre_constants import branch
 from bs4 import BeautifulSoup
 from lxml import etree
 from selenium import webdriver
@@ -22,14 +22,14 @@ class WebpageFields():
 
     def __init__(self):
         self.navigateRadio = ''
-        self.RESULT_URL = ''
-        self.PREFIX = ''
-        self.SEM = 0
-        self.FROM = 0
-        self.TO = 0
+        self.result_url = ''
+        self.prefix = ''
+        self.sem = 0
+        self.fromroll = 0
+        self.toroll = 0
         self.SHEETNAME = ''
         self.enrList = []
-        self.BRANCH = ''
+        self.branch = ''
 
 
 class Status(Enum):
@@ -84,12 +84,23 @@ def init(debug=False, headless=False):
 
     if debug_setting:
         return webdriver.Chrome(config.BROW_DRIVER, options=opts)
+    
     # svc = Service(ChromeDriverManager(version=versionNumber).install())
     # return webdriver.Chrome(service=svc, options=opts)
+   
     return webdriver.Chrome(
         ChromeDriverManager(version=versionNumber).install(), options=opts)
+    
     # return webdriver.Chrome( executable_path=r"C:\Program Files\chromedriver", options=opts )
     # driver = webdriver.Chrome(service=svc, options=opts)
+
+
+def takeinput1() -> WebpageFields:
+    parser = getparser()
+    if parser.data:
+        page = parse_data()
+    else:
+        page = get_input()
 
 
 def takeinput():
@@ -103,8 +114,10 @@ def takeinput():
             inputReceived = True
 
     navigateRadio = {
-        'D': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
-        'M': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
+        # 'D': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[13]/input',
+        'D': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr[2]/td[3]/input',
+        # 'M': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr/td[18]/input'
+        'M': '/html/body/form/div[3]/div[2]/div[1]/fieldset/table/tbody/tr[1]/td[3]/input'
     }
     branchResult = {
         'D': 'http://result.rgpv.ac.in/Result/McaDDrslt.aspx',
@@ -117,16 +130,16 @@ def takeinput():
 
     B = userInput['class'][0].upper()
     page.navigateRadio = navigateRadio[B]
-    page.BRANCH = branch[B]
-    page.RESULT_URL = branchResult[B]
-    page.PREFIX = userInput['prefix']
-    page.SEM = int(float(userInput['semester']))
-    page.FROM = int(float(userInput['from']))
-    page.TO = int(float(userInput['to']))
-    # SHEETNAME = MCADD CA19 SEM 6 _unique-id_
-    page.SHEETNAME = (f"{userInput['class']} {page.PREFIX[-6:-2]} "
-                      f"SEM {page.SEM} uid_{int(time.time())}")
-    page.enrList = input_utils.enrgenerator(page.PREFIX, page.FROM, page.TO)
+    page.branch = branch[B]
+    page.result_url = branchResult[B]
+    page.prefix = userInput['prefix']
+    page.sem = int(float(userInput['semester']))
+    page.fromroll = int(float(userInput['from']))
+    page.toroll = int(float(userInput['to']))
+    # SHEETNAME = MCADD CA19 sem 6 _unique-id_
+    page.SHEETNAME = (f"{userInput['class']} {page.prefix[-6:-2]} "
+                      f"SEM {page.sem} uid_{int(time.time())}")
+    page.enrList = input_utils.enrgenerator(page.prefix, page.fromroll, page.toroll)
     return page, bool(userInput['hidechrome'])
 
 
@@ -161,7 +174,7 @@ def automate(pgObj: WebpageFields, i: int) -> Status:
 
     enr = pgObj.enrList[i]
     enrollment.send_keys(enr)
-    year.send_keys(pgObj.SEM)
+    year.send_keys(pgObj.sem)
 
     capcode = captcha_decode(url, DPATH)
     if (debug_setting):
@@ -217,7 +230,7 @@ def automate(pgObj: WebpageFields, i: int) -> Status:
                 print(viewr)
                 raise ValueError
         except ValueError:
-            driver.get('%s' % pgObj.RESULT_URL)
+            driver.get('%s' % pgObj.result_url)
             stat = Status.INFO_ERROR
             # print('INFO MISSING')
         except NoSuchElementException:
@@ -276,10 +289,10 @@ def scrape(pgObj: WebpageFields, studentsList: list):
     for id in idList_StuInfo:
         studentsList.append((soup.find('span', id=id)).string)
 
-    if pgObj.BRANCH == 'MCA':
+    if pgObj.branch == 'MCA':
         for id in idList_McaGrade:
             gradesList.append(documentObjectModel.xpath(id)[0].text)
-    elif pgObj.BRANCH == 'DDMCA':
+    elif pgObj.branch == 'DDMCA':
         for id in idList_DdmcaGrade:
             gradesList.append(documentObjectModel.xpath(id)[0].text)
 
@@ -303,39 +316,39 @@ def extract(pgObj: WebpageFields, students: list):
     EXCELFILE = pgObj.SHEETNAME + '.xlsx'
     print(students)
     df = pd.DataFrame()
-    if pgObj.BRANCH == 'DDMCA':
+    if pgObj.branch == 'DDMCA':
         df['Name'] = students[0::12]
         df['Enrollment'] = students[1::12]
         df['Result'] = students[2::12]
         df['SGPC'] = students[3::12]
         df['CGPA'] = students[4::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '01'] = students[5::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '02'] = students[6::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '03'] = students[7::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '04'] = students[8::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '05'] = students[9::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '06'] = students[10::12]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '07'] = students[11::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '01'] = students[5::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '02'] = students[6::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '03'] = students[7::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '04'] = students[8::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '05'] = students[9::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '06'] = students[10::12]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '07'] = students[11::12]
 
-    elif pgObj.BRANCH == 'MCA':
+    elif pgObj.branch == 'MCA':
         df['Name'] = students[0::10]
         df['Enrollment'] = students[1::10]
         df['Result'] = students[2::10]
         df['SGPC'] = students[3::10]
         df['CGPA'] = students[4::10]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '01'] = students[5::10]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '02'] = students[6::10]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '03'] = students[7::10]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '04'] = students[8::10]
-        df[pgObj.BRANCH + ' ' + str(pgObj.SEM) + '05'] = students[9::10]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '01'] = students[5::10]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '02'] = students[6::10]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '03'] = students[7::10]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '04'] = students[8::10]
+        df[pgObj.branch + ' ' + str(pgObj.sem) + '05'] = students[9::10]
 
     with pd.ExcelWriter(EXCELFILE, engine='openpyxl') as writer:
-        df.to_excel(writer, sheet_name=pgObj.PREFIX, index=True)
+        df.to_excel(writer, sheet_name=pgObj.prefix, index=True)
     print('Data extraction done.')
     print(f'{records} records extracted to \'{pgObj.SHEETNAME}.xlsx\'.')
     print()
     
-    analysis.getData(EXCELFILE,pgObj.BRANCH)
+    analysis.getData(EXCELFILE,pgObj.branch)
     print("Press Ctrl+c to exit.")
 
 
@@ -350,14 +363,14 @@ def main():
     students = list()
     records = caperror = 0
     i = 0
-    # i = pageData.FROM
+    # i = pageData.fromroll
 
     driver.get("http://result.rgpv.ac.in/Result/ProgramSelect.aspx")
     Radio = driver.find_element(by=By.XPATH,
                                 value='%s' % pageData.navigateRadio)
     Radio.click()
 
-    # while(i in range(pageData.FROM, pageData.TO + 1)):
+    # while(i in range(pageData.fromroll, pageData.toroll + 1)):
     while i < len(pageData.enrList):
         # pageStatus = automate(driver, pageData, i)
         pageStatus = automate(pageData, i)
